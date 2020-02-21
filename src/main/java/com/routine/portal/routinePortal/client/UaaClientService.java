@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.Optional;
 
 @Service
-@FeignClient(value = "UaaClientService", url = "localhost:20223/api/auth/")
+@FeignClient(value = "UaaClientService", url = "localhost:20223/public/")
 public interface UaaClientService {
 
     @PostMapping("signin")

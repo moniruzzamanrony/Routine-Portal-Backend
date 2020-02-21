@@ -25,7 +25,7 @@ private final UaaClientService uaaClientService;
         {
 
         }
-        IdentityResponse identityResponse=new IdentityResponse(accessTokenResponseOptional.get().getAccessToken());
+        IdentityResponse identityResponse = new IdentityResponse(accessTokenResponseOptional.get().getToken());
         return new ResponseEntity(identityResponse, HttpStatus.OK);
     }
 }

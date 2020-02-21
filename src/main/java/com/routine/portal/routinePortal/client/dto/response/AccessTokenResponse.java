@@ -1,10 +1,6 @@
 package com.routine.portal.routinePortal.client.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -13,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AccessTokenResponse {
 
-    private String accessToken;
+    private String token;
 }
