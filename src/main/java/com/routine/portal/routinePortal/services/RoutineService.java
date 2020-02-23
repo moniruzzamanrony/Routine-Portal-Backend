@@ -1,26 +1,38 @@
 package com.routine.portal.routinePortal.services;
 
-import com.routine.portal.routinePortal.domain.model.*;
+import com.routine.portal.routinePortal.client.UaaClientService;
+import com.routine.portal.routinePortal.client.dto.response.LoggedUserDetailsResponse;
 import com.routine.portal.routinePortal.domain.repository.RoutineRepository;
-import com.routine.portal.routinePortal.dto.response.IdentityResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class RoutineService {
 
     private final RoutineRepository routineRepository;
+    private UaaClientService uaaClientService;
 
 
-    public ResponseEntity<IdentityResponse> create(String routineVersionCode) {
-        ArrayList<String> timeList = new ArrayList<>();
+    public ResponseEntity<String> create(String routineVersionCode, HttpServletRequest request) {
+        if (request.getHeader("Authorization") != null) {
+            String token = request.getHeader("Authorization").replace("Bearer ", "");
+            Optional<LoggedUserDetailsResponse> loggedUserDetailsResponse = uaaClientService.getLoggedUserDetails(token);
+            System.out.print(loggedUserDetailsResponse.get().getIsAuthenticated());
+            return new ResponseEntity("Ok", HttpStatus.OK);
+        } else {
+
+            return new ResponseEntity(routineVersionCode, HttpStatus.FORBIDDEN);
+        }
+
+    }
+}
+/*        ArrayList<String> timeList = new ArrayList<>();
         timeList.add("8:30-10:00");
         timeList.add("10:00-11:30");
         timeList.add("11:30-01:00");
@@ -123,8 +135,4 @@ public class RoutineService {
         routine.setThursday(thursdayList);
         routine.setWednesday(wednesdayList);
 
-        routineRepository.save(routine);
-        return new ResponseEntity(new IdentityResponse(routineId), HttpStatus.CREATED);
-
-    }
-}
+        routineRepository.save(routine);*/
