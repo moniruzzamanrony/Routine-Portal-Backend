@@ -1,138 +1,139 @@
 package com.routine.portal.routinePortal.services;
 
-import com.routine.portal.routinePortal.client.UaaClientService;
-import com.routine.portal.routinePortal.client.dto.response.LoggedUserDetailsResponse;
+import com.routine.portal.routinePortal.domain.model.*;
 import com.routine.portal.routinePortal.domain.repository.RoutineRepository;
+import com.routine.portal.routinePortal.dto.request.CreateRoutineRequest;
+import com.routine.portal.routinePortal.dto.response.IdentityResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class RoutineService {
-
     private final RoutineRepository routineRepository;
-    private UaaClientService uaaClientService;
 
-
-    public ResponseEntity<String> create(String routineVersionCode, HttpServletRequest request) {
-        if (request.getHeader("Authorization") != null) {
-            String token = request.getHeader("Authorization").replace("Bearer ", "");
-            Optional<LoggedUserDetailsResponse> loggedUserDetailsResponse = uaaClientService.getLoggedUserDetails(token);
-            System.out.print(loggedUserDetailsResponse.get().getIsAuthenticated());
-            return new ResponseEntity("Ok", HttpStatus.OK);
-        } else {
-
-            return new ResponseEntity(routineVersionCode, HttpStatus.FORBIDDEN);
-        }
-
-    }
-}
-/*        ArrayList<String> timeList = new ArrayList<>();
-        timeList.add("8:30-10:00");
-        timeList.add("10:00-11:30");
-        timeList.add("11:30-01:00");
-        timeList.add("01:00-02:30");
-        timeList.add("02:30-04:00");
-        timeList.add("4:00-05:30");
+    public ResponseEntity<IdentityResponse> create(CreateRoutineRequest createRoutineRequest) {
 
         String routineId = UUID.randomUUID().toString();
-        List<Saturday> saturdayList = new ArrayList<>();
-        for (String time : timeList) {
-            Saturday saturday = new Saturday();
-            saturday.setRoutineId(routineId);
-            saturday.setTime(time);
-            saturday.setRoomNo("Not Occupied");
-            saturday.setFm("Not Occupied");
-            saturday.setLabel("Not Occupied");
-            saturday.setCourseCode("Not Occupied");
-            saturday.setSection("Not Occupied");
-            saturdayList.add(saturday);
+        String daysId = UUID.randomUUID().toString();
+        ArrayList<ClassDetailsSaturday> saturdayList = new ArrayList<>();
 
+        for (ClassDetailsSaturday classDetailsSaturday : createRoutineRequest.getDays().get(0).getSaturday()) {
+            ClassDetailsSaturday saturdayClassDetails = new ClassDetailsSaturday();
+            saturdayClassDetails.setClassDetailsId(UUID.randomUUID().toString());
+            saturdayClassDetails.setCourseCode(classDetailsSaturday.getCourseCode());
+            saturdayClassDetails.setFacultyMember(classDetailsSaturday.getFacultyMember());
+            saturdayClassDetails.setLabel(classDetailsSaturday.getLabel());
+            saturdayClassDetails.setRoomNo(classDetailsSaturday.getRoomNo());
+            saturdayClassDetails.setSection(classDetailsSaturday.getSection());
+            saturdayClassDetails.setTime(classDetailsSaturday.getTime());
+            saturdayList.add(saturdayClassDetails);
         }
 
-        List<Sunday> sundayList = new ArrayList<>();
-        for (String time : timeList) {
-            Sunday sunday = new Sunday();
-            sunday.setRoutineId(routineId);
-            sunday.setTime(time);
-            sunday.setRoomNo("Not Occupied");
-            sunday.setFm("Not Occupied");
-            sunday.setLabel("Not Occupied");
-            sunday.setCourseCode("Not Occupied");
-            sunday.setSection("Not Occupied");
-            sundayList.add(sunday);
 
+        ArrayList<ClassDetailsSunday> sundayList = new ArrayList<>();
+        for (ClassDetailsSunday classDetailsSunday : createRoutineRequest.getDays().get(0).getSunday()) {
+            ClassDetailsSunday sundayClassDetails = new ClassDetailsSunday();
+            sundayClassDetails.setClassDetailsId(UUID.randomUUID().toString());
+            sundayClassDetails.setCourseCode(classDetailsSunday.getCourseCode());
+            sundayClassDetails.setFacultyMember(classDetailsSunday.getFacultyMember());
+            sundayClassDetails.setLabel(classDetailsSunday.getLabel());
+            sundayClassDetails.setRoomNo(classDetailsSunday.getRoomNo());
+            sundayClassDetails.setSection(classDetailsSunday.getSection());
+            sundayClassDetails.setTime(classDetailsSunday.getTime());
+            sundayList.add(sundayClassDetails);
         }
 
-        List<Monday> mondayList = new ArrayList<>();
-        for (String time : timeList) {
-            Monday monday = new Monday();
 
-            monday.setRoutineId(routineId);
-            monday.setTime(time);
-            monday.setRoomNo("Not Occupied");
-            monday.setFm("Not Occupied");
-            monday.setLabel("Not Occupied");
-            monday.setCourseCode("Not Occupied");
-            monday.setSection("Not Occupied");
-            mondayList.add(monday);
-
+        ArrayList<ClassDetailsMonday> mondayList = new ArrayList<>();
+        for (ClassDetailsMonday classDetailsMonday : createRoutineRequest.getDays().get(0).getMonday()) {
+            ClassDetailsMonday detailsMonday = new ClassDetailsMonday();
+            detailsMonday.setClassDetailsId(UUID.randomUUID().toString());
+            detailsMonday.setCourseCode(classDetailsMonday.getCourseCode());
+            detailsMonday.setFacultyMember(classDetailsMonday.getFacultyMember());
+            detailsMonday.setLabel(classDetailsMonday.getLabel());
+            detailsMonday.setRoomNo(classDetailsMonday.getRoomNo());
+            detailsMonday.setSection(classDetailsMonday.getSection());
+            detailsMonday.setTime(classDetailsMonday.getTime());
+            mondayList.add(detailsMonday);
         }
 
-        List<Tuesday> tuesdayList = new ArrayList<>();
-        for (String time : timeList) {
-            Tuesday tuesday = new Tuesday();
-            tuesday.setRoutineId(routineId);
-            tuesday.setTime(time);
-            tuesday.setRoomNo("Not Occupied");
-            tuesday.setFm("Not Occupied");
-            tuesday.setLabel("Not Occupied");
-            tuesday.setCourseCode("Not Occupied");
-            tuesday.setSection("Not Occupied");
-            tuesdayList.add(tuesday);
-
+        ArrayList<ClassDetailsTuesday> tuesdayArrayList = new ArrayList<>();
+        for (ClassDetailsTuesday classDetailsTuesday : createRoutineRequest.getDays().get(0).getTuesday()) {
+            ClassDetailsTuesday detailsTuesday = new ClassDetailsTuesday();
+            detailsTuesday.setClassDetailsId(UUID.randomUUID().toString());
+            detailsTuesday.setCourseCode(classDetailsTuesday.getCourseCode());
+            detailsTuesday.setFacultyMember(classDetailsTuesday.getFacultyMember());
+            detailsTuesday.setLabel(classDetailsTuesday.getLabel());
+            detailsTuesday.setRoomNo(classDetailsTuesday.getRoomNo());
+            detailsTuesday.setSection(classDetailsTuesday.getSection());
+            detailsTuesday.setTime(classDetailsTuesday.getTime());
+            tuesdayArrayList.add(detailsTuesday);
         }
 
-        List<Thursday> thursdayList = new ArrayList<>();
-        for (String time : timeList) {
-            Thursday thursday = new Thursday();
-            thursday.setRoutineId(routineId);
-            thursday.setTime(time);
-            thursday.setRoomNo("Not Occupied");
-            thursday.setFm("Not Occupied");
-            thursday.setLabel("Not Occupied");
-            thursday.setCourseCode("Not Occupied");
-            thursday.setSection("Not Occupied");
-            thursdayList.add(thursday);
-
+        ArrayList<ClassDetailsWednesday> wednesdaysList = new ArrayList<>();
+        for (ClassDetailsWednesday detailsWednesday : createRoutineRequest.getDays().get(0).getWednesday()) {
+            ClassDetailsWednesday classDetailsWednesday = new ClassDetailsWednesday();
+            classDetailsWednesday.setClassDetailsId(UUID.randomUUID().toString());
+            classDetailsWednesday.setCourseCode(detailsWednesday.getCourseCode());
+            classDetailsWednesday.setFacultyMember(detailsWednesday.getFacultyMember());
+            classDetailsWednesday.setLabel(detailsWednesday.getLabel());
+            classDetailsWednesday.setRoomNo(detailsWednesday.getRoomNo());
+            classDetailsWednesday.setSection(detailsWednesday.getSection());
+            classDetailsWednesday.setTime(detailsWednesday.getTime());
+            wednesdaysList.add(classDetailsWednesday);
         }
 
-        List<Wednesday> wednesdayList = new ArrayList<>();
-        for (String time : timeList) {
-            Wednesday wednesday = new Wednesday();
-            wednesday.setRoutineId(routineId);
-            wednesday.setTime(time);
-            wednesday.setRoomNo("Not Occupied");
-            wednesday.setFm("Not Occupied");
-            wednesday.setLabel("Not Occupied");
-            wednesday.setCourseCode("Not Occupied");
-            wednesday.setSection("Not Occupied");
-            wednesdayList.add(wednesday);
+        ArrayList<ClassDetailsThursday> thursdayArrayList = new ArrayList<>();
+        for (ClassDetailsThursday detailsThursday : createRoutineRequest.getDays().get(0).getThursday()) {
+            ClassDetailsThursday classDetailsThursday = new ClassDetailsThursday();
+            classDetailsThursday.setClassDetailsId(UUID.randomUUID().toString());
+            classDetailsThursday.setCourseCode(detailsThursday.getCourseCode());
+            classDetailsThursday.setFacultyMember(detailsThursday.getFacultyMember());
+            classDetailsThursday.setLabel(detailsThursday.getLabel());
+            classDetailsThursday.setRoomNo(detailsThursday.getRoomNo());
+            classDetailsThursday.setSection(detailsThursday.getSection());
+            classDetailsThursday.setTime(detailsThursday.getTime());
+            thursdayArrayList.add(classDetailsThursday);
         }
+
+
+        ArrayList<Days> daysArrayList = new ArrayList<>();
+        Days days = new Days();
+        days.setDayId(daysId);
+        days.setSaturday(saturdayList);
+        days.setSunday(sundayList);
+        days.setMonday(mondayList);
+        days.setTuesday(tuesdayArrayList);
+        days.setWednesday(wednesdaysList);
+        days.setThursday(thursdayArrayList);
+        daysArrayList.add(days);
 
         Routine routine = new Routine();
         routine.setRoutineId(routineId);
-        routine.setRoutineVersion("v-" + routineVersionCode);
-        routine.setSaturday(saturdayList);
-        routine.setSunday(sundayList);
-        //routine.setMonday(mondayList);
-        routine.setTuesday(tuesdayList);
-        routine.setThursday(thursdayList);
-        routine.setWednesday(wednesdayList);
+        routine.setRoutineEffectiveDate(createRoutineRequest.getRoutineEffectiveDate());
+        routine.setRoutinePublisherId("fdgfdgfdg");
+        routine.setRoutineVersion(createRoutineRequest.getRoutineVersion());
+        routine.setRoutineSession(createRoutineRequest.getRoutineSession());
+        routine.setDays(daysArrayList);
 
-        routineRepository.save(routine);*/
+        routineRepository.save(routine);
+
+        return new ResponseEntity(new IdentityResponse(routineId), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<List<Routine>> getRoutine() {
+
+        List<Routine> routineOptional = routineRepository.findAll();
+
+
+        return new ResponseEntity(routineOptional, HttpStatus.OK);
+    }
+}
+

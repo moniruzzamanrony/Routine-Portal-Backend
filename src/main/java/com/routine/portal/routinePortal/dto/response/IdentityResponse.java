@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IdentityResponse {
-    private String accessToken;
+    private String id;
 }

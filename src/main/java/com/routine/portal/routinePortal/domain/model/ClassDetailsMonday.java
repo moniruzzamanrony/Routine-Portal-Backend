@@ -9,18 +9,26 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
-public class Sunday {
-
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClassDetailsMonday {
     @Id
-    private String routineId;
-    private String time;
+    private String classDetailsId;
+
+
     private String roomNo;
-    private String fm;
+
+    private String time;
+
     private String label;
+
     private String courseCode;
+
     private String section;
+
+    private String facultyMember;
+
+
 }

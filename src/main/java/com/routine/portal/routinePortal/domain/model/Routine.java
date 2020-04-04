@@ -5,43 +5,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import java.util.List;
 
-
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Routine {
 
-    @NotNull
     @Id
+    @Column(name = "routine_id")
     private String routineId;
 
     private String routineVersion;
 
-    @ElementCollection
-    private List<Saturday> saturday;
+    private String routinePublisherId;
 
-    @ElementCollection
-    private List<Sunday> sunday;
+    private String routineSession;
 
-    @ElementCollection
-    private List<Monday> monday;
+    private String routineEffectiveDate;
 
-    @ElementCollection
-    private List<Tuesday> tuesday;
-
-    @ElementCollection
-    private List<Wednesday> wednesday;
-
-    @ElementCollection
-    private List<Thursday> thursday;
-
+    @OneToMany(targetEntity = Days.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "f_k", referencedColumnName = "routine_id")
+    private List<Days> days;
 
 }

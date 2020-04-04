@@ -1,5 +1,6 @@
 package com.routine.portal.routinePortal.services;
 
+
 import com.routine.portal.routinePortal.client.UaaClientService;
 import com.routine.portal.routinePortal.client.dto.request.LoginRequest;
 import com.routine.portal.routinePortal.client.dto.response.AccessTokenResponse;
@@ -15,14 +16,14 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class LoginService {
-private final UaaClientService uaaClientService;
+
+    private final UaaClientService uaaClientService;
 
     public ResponseEntity<IdentityResponse> login(UserLoginRequest userLoginRequest) {
 
-        Optional<AccessTokenResponse> accessTokenResponseOptional=uaaClientService.login(
-                new LoginRequest(userLoginRequest.getEmployeeId(),userLoginRequest.getPassword()));
-        if(!accessTokenResponseOptional.isPresent())
-        {
+        Optional<AccessTokenResponse> accessTokenResponseOptional = uaaClientService.login(
+                new LoginRequest(userLoginRequest.getEmployeeId(), userLoginRequest.getPassword()));
+        if (!accessTokenResponseOptional.isPresent()) {
 
         }
         IdentityResponse identityResponse = new IdentityResponse(accessTokenResponseOptional.get().getToken());
