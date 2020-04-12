@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @CrossOrigin("*")
 @RequestMapping("admin/")
-public class AdminController {
+public class UserAdminController {
 
     private final RoutineService routineService;
 
@@ -37,6 +37,6 @@ public class AdminController {
 
     @PutMapping("routine")
     public ResponseEntity<String> updateRoutine(@RequestBody RoutineUpdateRequest routineUpdateRequest) {
-        return routineService.update(routineUpdateRequest);
+        return routineService.updateMyClassDetails(routineUpdateRequest);
     }
 }

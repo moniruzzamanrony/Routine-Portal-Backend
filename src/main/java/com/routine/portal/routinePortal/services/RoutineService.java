@@ -153,26 +153,72 @@ public class RoutineService {
 
     public ResponseEntity<Routine> getRoutine() {
 
+        if (!authUtil.isLogged()) {
+            throw new ForbiddenException("User is't logged");
+        }
         List<Routine> routineList = routineRepository.findAll();
+
         return new ResponseEntity(routineList.get(0), HttpStatus.OK);
     }
 
     public ResponseEntity<List<Routine>> getRoutineList() {
 
+        if (!authUtil.isLogged()) {
+            throw new ForbiddenException("User is't logged");
+        }
         List<Routine> routineList = routineRepository.findAll();
+
         return new ResponseEntity(routineList, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> update(RoutineUpdateRequest routineUpdateRequest) {
+    public ResponseEntity<String> updateMyClassDetails(RoutineUpdateRequest routineUpdateRequest) {
 
-        if (routineRepository.updateMyClass(routineUpdateRequest.getClassDetailsId(), routineUpdateRequest.getRoomNo(),
-                routineUpdateRequest.getStartTime(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getLabel(),
-                routineUpdateRequest.getCourseCode(), routineUpdateRequest.getSection(),
-                routineUpdateRequest.getFacultyMember(), routineUpdateRequest.getDayName()) == 1) {
-
+        if (!authUtil.isLogged()) {
+            throw new ForbiddenException("User is't logged");
         }
 
-        return new ResponseEntity("ffffff", HttpStatus.OK);
+        if (routineUpdateRequest.getDayName().equals("saturday")) {
+            if (routineRepository.updateSaturdayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
+                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
+                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
+
+            }
+        } else if (routineUpdateRequest.getDayName().equals("sunday")) {
+            if (routineRepository.updateSundayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
+                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
+                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
+
+            }
+        } else if (routineUpdateRequest.getDayName().equals("monday")) {
+            if (routineRepository.updateMondayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
+                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
+                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
+
+            }
+        } else if (routineUpdateRequest.getDayName().equals("tuesday")) {
+            if (routineRepository.updateTuesdayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
+                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
+                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
+
+            }
+        } else if (routineUpdateRequest.getDayName().equals("wednesday")) {
+            if (routineRepository.updateWednesdayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
+                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
+                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
+
+            }
+        } else if (routineUpdateRequest.getDayName().equals("thursday")) {
+            if (routineRepository.updateThursdayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
+                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
+                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
+
+            }
+        } else {
+            return new ResponseEntity("Update Error", HttpStatus.BAD_REQUEST);
+        }
+
+
+        return new ResponseEntity("Update Successful", HttpStatus.OK);
     }
 }
 
