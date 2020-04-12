@@ -25,6 +25,8 @@ public class Routine {
 
     private String routineSession;
 
+    private String routinePublishDate;
+
     private String routineEffectiveDate;
 
     @OneToMany(targetEntity = Days.class, cascade = CascadeType.ALL)

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: RP
+    name: Routine-Portal-Backend
   profiles:
     active: dev
 

@@ -1,21 +1,15 @@
-package com.routine.portal.routinePortal.domain.model;
+package com.routine.portal.routinePortal.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
+@AllArgsConstructor
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ClassDetailsWednesday {
+public class RoutineUpdateRequest {
 
-    @Id
     private String classDetailsId;
 
     private String roomNo;
@@ -32,7 +26,5 @@ public class ClassDetailsWednesday {
 
     private String facultyMember;
 
-    private String facultyMemberEmployeeId;
-
-
+    private String dayName;
 }

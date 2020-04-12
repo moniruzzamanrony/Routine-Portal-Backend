@@ -17,10 +17,11 @@ public class ClassDetailsMonday {
     @Id
     private String classDetailsId;
 
-
     private String roomNo;
 
-    private String time;
+    private String startTime;
+
+    private String endTime;
 
     private String label;
 
@@ -29,6 +30,8 @@ public class ClassDetailsMonday {
     private String section;
 
     private String facultyMember;
+
+    private String facultyMemberEmployeeId;
 
 
 }

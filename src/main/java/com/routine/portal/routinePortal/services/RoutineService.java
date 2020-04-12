@@ -1,15 +1,21 @@
 package com.routine.portal.routinePortal.services;
 
+import com.routine.portal.routinePortal.config.AuthUtil;
 import com.routine.portal.routinePortal.domain.model.*;
 import com.routine.portal.routinePortal.domain.repository.RoutineRepository;
 import com.routine.portal.routinePortal.dto.request.CreateRoutineRequest;
+import com.routine.portal.routinePortal.dto.request.RoutineUpdateRequest;
 import com.routine.portal.routinePortal.dto.response.IdentityResponse;
+import com.routine.portal.routinePortal.exception.ForbiddenException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,13 +23,17 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RoutineService {
     private final RoutineRepository routineRepository;
+    private final AuthUtil authUtil;
 
     public ResponseEntity<IdentityResponse> create(CreateRoutineRequest createRoutineRequest) {
+        if (!authUtil.isLogged()) {
+            throw new ForbiddenException("User is't logged");
+        }
 
         String routineId = UUID.randomUUID().toString();
         String daysId = UUID.randomUUID().toString();
         ArrayList<ClassDetailsSaturday> saturdayList = new ArrayList<>();
-
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         for (ClassDetailsSaturday classDetailsSaturday : createRoutineRequest.getDays().get(0).getSaturday()) {
             ClassDetailsSaturday saturdayClassDetails = new ClassDetailsSaturday();
             saturdayClassDetails.setClassDetailsId(UUID.randomUUID().toString());
@@ -32,7 +42,9 @@ public class RoutineService {
             saturdayClassDetails.setLabel(classDetailsSaturday.getLabel());
             saturdayClassDetails.setRoomNo(classDetailsSaturday.getRoomNo());
             saturdayClassDetails.setSection(classDetailsSaturday.getSection());
-            saturdayClassDetails.setTime(classDetailsSaturday.getTime());
+            saturdayClassDetails.setStartTime(classDetailsSaturday.getStartTime());
+            saturdayClassDetails.setEndTime(classDetailsSaturday.getEndTime());
+            saturdayClassDetails.setFacultyMemberEmployeeId(classDetailsSaturday.getFacultyMemberEmployeeId());
             saturdayList.add(saturdayClassDetails);
         }
 
@@ -46,7 +58,9 @@ public class RoutineService {
             sundayClassDetails.setLabel(classDetailsSunday.getLabel());
             sundayClassDetails.setRoomNo(classDetailsSunday.getRoomNo());
             sundayClassDetails.setSection(classDetailsSunday.getSection());
-            sundayClassDetails.setTime(classDetailsSunday.getTime());
+            sundayClassDetails.setStartTime(classDetailsSunday.getStartTime());
+            sundayClassDetails.setEndTime(classDetailsSunday.getEndTime());
+            sundayClassDetails.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
             sundayList.add(sundayClassDetails);
         }
 
@@ -60,7 +74,9 @@ public class RoutineService {
             detailsMonday.setLabel(classDetailsMonday.getLabel());
             detailsMonday.setRoomNo(classDetailsMonday.getRoomNo());
             detailsMonday.setSection(classDetailsMonday.getSection());
-            detailsMonday.setTime(classDetailsMonday.getTime());
+            detailsMonday.setStartTime(classDetailsMonday.getStartTime());
+            detailsMonday.setEndTime(classDetailsMonday.getEndTime());
+            detailsMonday.setFacultyMemberEmployeeId(classDetailsMonday.getFacultyMemberEmployeeId());
             mondayList.add(detailsMonday);
         }
 
@@ -73,7 +89,9 @@ public class RoutineService {
             detailsTuesday.setLabel(classDetailsTuesday.getLabel());
             detailsTuesday.setRoomNo(classDetailsTuesday.getRoomNo());
             detailsTuesday.setSection(classDetailsTuesday.getSection());
-            detailsTuesday.setTime(classDetailsTuesday.getTime());
+            detailsTuesday.setStartTime(classDetailsTuesday.getStartTime());
+            detailsTuesday.setEndTime(classDetailsTuesday.getEndTime());
+            detailsTuesday.setFacultyMemberEmployeeId(classDetailsTuesday.getFacultyMemberEmployeeId());
             tuesdayArrayList.add(detailsTuesday);
         }
 
@@ -86,7 +104,9 @@ public class RoutineService {
             classDetailsWednesday.setLabel(detailsWednesday.getLabel());
             classDetailsWednesday.setRoomNo(detailsWednesday.getRoomNo());
             classDetailsWednesday.setSection(detailsWednesday.getSection());
-            classDetailsWednesday.setTime(detailsWednesday.getTime());
+            classDetailsWednesday.setStartTime(detailsWednesday.getStartTime());
+            classDetailsWednesday.setEndTime(detailsWednesday.getEndTime());
+            classDetailsWednesday.setFacultyMemberEmployeeId(detailsWednesday.getFacultyMemberEmployeeId());
             wednesdaysList.add(classDetailsWednesday);
         }
 
@@ -99,7 +119,9 @@ public class RoutineService {
             classDetailsThursday.setLabel(detailsThursday.getLabel());
             classDetailsThursday.setRoomNo(detailsThursday.getRoomNo());
             classDetailsThursday.setSection(detailsThursday.getSection());
-            classDetailsThursday.setTime(detailsThursday.getTime());
+            classDetailsThursday.setStartTime(detailsThursday.getStartTime());
+            classDetailsThursday.setEndTime(detailsThursday.getEndTime());
+            classDetailsThursday.setFacultyMemberEmployeeId(detailsThursday.getFacultyMemberEmployeeId());
             thursdayArrayList.add(classDetailsThursday);
         }
 
@@ -118,7 +140,8 @@ public class RoutineService {
         Routine routine = new Routine();
         routine.setRoutineId(routineId);
         routine.setRoutineEffectiveDate(createRoutineRequest.getRoutineEffectiveDate());
-        routine.setRoutinePublisherId("fdgfdgfdg");
+        routine.setRoutinePublishDate(df.format(new Date()));
+        routine.setRoutinePublisherId(authUtil.getEmployeeId());
         routine.setRoutineVersion(createRoutineRequest.getRoutineVersion());
         routine.setRoutineSession(createRoutineRequest.getRoutineSession());
         routine.setDays(daysArrayList);
@@ -128,12 +151,28 @@ public class RoutineService {
         return new ResponseEntity(new IdentityResponse(routineId), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<Routine>> getRoutine() {
+    public ResponseEntity<Routine> getRoutine() {
 
-        List<Routine> routineOptional = routineRepository.findAll();
+        List<Routine> routineList = routineRepository.findAll();
+        return new ResponseEntity(routineList.get(0), HttpStatus.OK);
+    }
 
+    public ResponseEntity<List<Routine>> getRoutineList() {
 
-        return new ResponseEntity(routineOptional, HttpStatus.OK);
+        List<Routine> routineList = routineRepository.findAll();
+        return new ResponseEntity(routineList, HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> update(RoutineUpdateRequest routineUpdateRequest) {
+
+        if (routineRepository.updateMyClass(routineUpdateRequest.getClassDetailsId(), routineUpdateRequest.getRoomNo(),
+                routineUpdateRequest.getStartTime(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getLabel(),
+                routineUpdateRequest.getCourseCode(), routineUpdateRequest.getSection(),
+                routineUpdateRequest.getFacultyMember(), routineUpdateRequest.getDayName()) == 1) {
+
+        }
+
+        return new ResponseEntity("ffffff", HttpStatus.OK);
     }
 }
 

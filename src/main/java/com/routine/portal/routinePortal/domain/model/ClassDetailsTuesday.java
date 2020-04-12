@@ -19,7 +19,9 @@ public class ClassDetailsTuesday {
 
     private String roomNo;
 
-    private String time;
+    private String startTime;
+
+    private String endTime;
 
     private String label;
 
@@ -28,6 +30,8 @@ public class ClassDetailsTuesday {
     private String section;
 
     private String facultyMember;
+
+    private String facultyMemberEmployeeId;
 
 
 }
