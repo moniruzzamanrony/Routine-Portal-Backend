@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @AllArgsConstructor
@@ -23,8 +23,8 @@ public class UserSelfController {
         return routineService.updateMyClassDetails(routineUpdateRequest);
     }
 
-    @PutMapping("details")
-    public ResponseEntity<UserResponse> getUserDetails(HttpServletResponse httpServletResponse) {
-        return routineService.getUserDetails(httpServletResponse);
+    @GetMapping("details")
+    public ResponseEntity<UserResponse> getUserDetails(HttpServletRequest httpServletRequest) {
+        return routineService.getUserDetails(httpServletRequest);
     }
 }

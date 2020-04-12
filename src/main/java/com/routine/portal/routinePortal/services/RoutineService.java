@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -224,9 +224,9 @@ public class RoutineService {
         return new ResponseEntity("Update Successful", HttpStatus.OK);
     }
 
-    public ResponseEntity<UserResponse> getUserDetails(HttpServletResponse httpServletResponse) {
+    public ResponseEntity<UserResponse> getUserDetails(HttpServletRequest httpServletRequest) {
 
-        if (!authService.pink(httpServletResponse)) {
+        if (!authService.pink(httpServletRequest)) {
             throw new ForbiddenException("User nit Logged");
         }
         Optional<User> userOptional = userRepository.findByEmployeeId(authUtil.getEmployeeId());

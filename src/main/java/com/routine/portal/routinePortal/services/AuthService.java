@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -87,9 +88,9 @@ public class AuthService {
         return true;
     }
 
-    public boolean pink(HttpServletResponse response) {
+    public boolean pink(HttpServletRequest httpServletRequest) {
 
-        String header = response.getHeader("Authorization");
+        String header = httpServletRequest.getHeader("Authorization");
         Optional<LoggedUserDetailsResponse> loggedUserDetailsResponseOptional = uaaClientService.getLoggedUserDetails(header);
 
         if (!loggedUserDetailsResponseOptional.isPresent()) {
