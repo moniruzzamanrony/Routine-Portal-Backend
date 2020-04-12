@@ -3,27 +3,30 @@ package com.routine.portal.routinePortal.services;
 import com.routine.portal.routinePortal.config.AuthUtil;
 import com.routine.portal.routinePortal.domain.model.*;
 import com.routine.portal.routinePortal.domain.repository.RoutineRepository;
+import com.routine.portal.routinePortal.domain.repository.UserRepository;
 import com.routine.portal.routinePortal.dto.request.CreateRoutineRequest;
 import com.routine.portal.routinePortal.dto.request.RoutineUpdateRequest;
 import com.routine.portal.routinePortal.dto.response.IdentityResponse;
+import com.routine.portal.routinePortal.dto.response.UserResponse;
 import com.routine.portal.routinePortal.exception.ForbiddenException;
+import com.routine.portal.routinePortal.exception.ResourseNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class RoutineService {
     private final RoutineRepository routineRepository;
+    private final UserRepository userRepository;
     private final AuthUtil authUtil;
+    private final AuthService authService;
 
     public ResponseEntity<IdentityResponse> create(CreateRoutineRequest createRoutineRequest) {
         if (!authUtil.isLogged()) {
@@ -219,6 +222,29 @@ public class RoutineService {
 
 
         return new ResponseEntity("Update Successful", HttpStatus.OK);
+    }
+
+    public ResponseEntity<UserResponse> getUserDetails(HttpServletResponse httpServletResponse) {
+
+        if (!authService.pink(httpServletResponse)) {
+            throw new ForbiddenException("User nit Logged");
+        }
+        Optional<User> userOptional = userRepository.findByEmployeeId(authUtil.getEmployeeId());
+        if (!userOptional.isPresent()) {
+            throw new ResourseNotFoundException("User Not Found");
+        }
+        UserResponse userResponse = new UserResponse();
+        userResponse.setDepartment(userOptional.get().getDepartment());
+        userResponse.setDesignation(userOptional.get().getDesignation());
+        userResponse.setEmail(userOptional.get().getEmail());
+        userResponse.setEmployeeId(userOptional.get().getEmployeeId());
+        userResponse.setFacultyType(userOptional.get().getFacultyType());
+        userResponse.setFullName(userOptional.get().getFullName());
+        userResponse.setPhoneNumber(userOptional.get().getPhoneNumber());
+        userResponse.setTeacherInitial(userOptional.get().getTeacherInitial());
+
+        return new ResponseEntity(userResponse, HttpStatus.OK);
+
     }
 }
 

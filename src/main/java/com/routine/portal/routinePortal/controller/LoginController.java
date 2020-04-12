@@ -10,17 +10,18 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+@CrossOrigin("*")
 @RestController
 @AllArgsConstructor
 public class LoginController {
     private final AuthService authService;
 
-    @PostMapping("public/login")
+    @PostMapping("login")
     public ResponseEntity<IdentityResponse> login(@RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) {
         return authService.login(userLoginRequest, response);
     }
 
-    @PostMapping("public/sign-up")
+    @PostMapping("sign-up")
     public ResponseEntity<IdentityResponse> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
         return authService.signUp(userSignUpRequest);
     }

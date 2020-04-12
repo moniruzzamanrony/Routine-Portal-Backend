@@ -87,6 +87,22 @@ public class AuthService {
         return true;
     }
 
+    public boolean pink(HttpServletResponse response) {
+
+        String header = response.getHeader("Authorization");
+        Optional<LoggedUserDetailsResponse> loggedUserDetailsResponseOptional = uaaClientService.getLoggedUserDetails(header);
+
+        if (!loggedUserDetailsResponseOptional.isPresent()) {
+            return false;
+        }
+        LoggedUserDetailsResponse loggedUserDetailsResponse = loggedUserDetailsResponseOptional.get();
+
+        authUtil.setEmployeeId(loggedUserDetailsResponse.getUserName());
+        authUtil.setAuthenticate(loggedUserDetailsResponse.getIsAuthenticated());
+        authUtil.setRoles(loggedUserDetailsResponse.getUserRole());
+        authUtil.setLogged(true);
+        return true;
+    }
 
     public String getTest() {
         return authUtil.getEmployeeId();
