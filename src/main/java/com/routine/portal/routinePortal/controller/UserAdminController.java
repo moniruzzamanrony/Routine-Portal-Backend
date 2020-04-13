@@ -2,14 +2,16 @@ package com.routine.portal.routinePortal.controller;
 
 
 import com.routine.portal.routinePortal.domain.model.Routine;
+import com.routine.portal.routinePortal.domain.model.User;
+import com.routine.portal.routinePortal.dto.request.ClassUpdateRequest;
 import com.routine.portal.routinePortal.dto.request.CreateRoutineRequest;
-import com.routine.portal.routinePortal.dto.request.RoutineUpdateRequest;
 import com.routine.portal.routinePortal.dto.response.IdentityResponse;
 import com.routine.portal.routinePortal.services.RoutineService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -36,7 +38,17 @@ public class UserAdminController {
     }
 
     @PutMapping("routine")
-    public ResponseEntity<String> updateRoutine(@RequestBody RoutineUpdateRequest routineUpdateRequest) {
+    public ResponseEntity<String> updateRoutine(@RequestBody ClassUpdateRequest routineUpdateRequest) {
         return routineService.updateMyClassDetails(routineUpdateRequest);
+    }
+
+    @DeleteMapping("routine")
+    public ResponseEntity<String> deleteRoutine(HttpServletRequest servletRequest) {
+        return routineService.deleteRoutine(servletRequest);
+    }
+
+    @GetMapping("faculties-list")
+    public ResponseEntity<List<User>> getFacultyList(HttpServletRequest httpServletRequest) {
+        return routineService.getFacultyList(httpServletRequest);
     }
 }

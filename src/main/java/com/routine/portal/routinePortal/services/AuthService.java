@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -45,7 +48,8 @@ public class AuthService {
     }
 
     public ResponseEntity<IdentityResponse> signUp(UserSignUpRequest userSignUpRequest) {
-
+        DateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+        Date dateobj = new Date();
         SignUpRequest signUpRequest = new SignUpRequest();
         signUpRequest.setUsername(userSignUpRequest.getEmployeeId());
         signUpRequest.setRole(userSignUpRequest.getRole());
@@ -65,6 +69,7 @@ public class AuthService {
         user.setPhoneNumber(userSignUpRequest.getPhoneNumber());
         user.setTeacherInitial(userSignUpRequest.getTeacherInitial());
         user.setUserId(userId.get());
+        user.setJoinDate(df.format(dateobj));
         userRepository.save(user);
 
         return new ResponseEntity(new IdentityResponse(userId.get()), HttpStatus.CREATED);

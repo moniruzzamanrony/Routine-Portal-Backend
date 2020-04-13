@@ -1,16 +1,17 @@
-package com.routine.portal.routinePortal.dto.request;
+package com.routine.portal.routinePortal.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@AllArgsConstructor
 @Setter
 @Getter
-public class RoutineUpdateRequest {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClassDetailsResponse {
 
-    private String classDetailsId;
 
     private String roomNo;
 
@@ -26,5 +27,7 @@ public class RoutineUpdateRequest {
 
     private String facultyMember;
 
-    private String dayName;
+    private String facultyMemberEmployeeId;
+
+
 }

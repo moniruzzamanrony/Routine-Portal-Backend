@@ -4,8 +4,9 @@ import com.routine.portal.routinePortal.config.AuthUtil;
 import com.routine.portal.routinePortal.domain.model.*;
 import com.routine.portal.routinePortal.domain.repository.RoutineRepository;
 import com.routine.portal.routinePortal.domain.repository.UserRepository;
+import com.routine.portal.routinePortal.dto.request.ClassUpdateRequest;
 import com.routine.portal.routinePortal.dto.request.CreateRoutineRequest;
-import com.routine.portal.routinePortal.dto.request.RoutineUpdateRequest;
+import com.routine.portal.routinePortal.dto.response.ClassDetailsResponse;
 import com.routine.portal.routinePortal.dto.response.IdentityResponse;
 import com.routine.portal.routinePortal.dto.response.UserResponse;
 import com.routine.portal.routinePortal.exception.ForbiddenException;
@@ -154,6 +155,10 @@ public class RoutineService {
         return new ResponseEntity(new IdentityResponse(routineId), HttpStatus.CREATED);
     }
 
+    /*
+     *
+     * Get Lat Routine
+     * */
     public ResponseEntity<Routine> getRoutine() {
 
         if (!authUtil.isLogged()) {
@@ -174,7 +179,7 @@ public class RoutineService {
         return new ResponseEntity(routineList, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateMyClassDetails(RoutineUpdateRequest routineUpdateRequest) {
+    public ResponseEntity<String> updateMyClassDetails(ClassUpdateRequest routineUpdateRequest) {
 
         if (!authUtil.isLogged()) {
             throw new ForbiddenException("User is't logged");
@@ -187,11 +192,7 @@ public class RoutineService {
 
             }
         } else if (routineUpdateRequest.getDayName().equals("sunday")) {
-            if (routineRepository.updateSundayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
-                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
-                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
 
-            }
         } else if (routineUpdateRequest.getDayName().equals("monday")) {
             if (routineRepository.updateMondayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
                     authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
@@ -224,10 +225,14 @@ public class RoutineService {
         return new ResponseEntity("Update Successful", HttpStatus.OK);
     }
 
+
+    /*
+     * Get User List
+     * */
     public ResponseEntity<UserResponse> getUserDetails(HttpServletRequest httpServletRequest) {
 
         if (!authService.pink(httpServletRequest)) {
-            throw new ForbiddenException("User nit Logged");
+            throw new ForbiddenException("User not Logged");
         }
         Optional<User> userOptional = userRepository.findByEmployeeId(authUtil.getEmployeeId());
         if (!userOptional.isPresent()) {
@@ -245,6 +250,166 @@ public class RoutineService {
 
         return new ResponseEntity(userResponse, HttpStatus.OK);
 
+    }
+
+    /*
+     * Get Faculty List
+     * */
+
+    public ResponseEntity<List<User>> getFacultyList(HttpServletRequest httpServletRequest) {
+        if (!authService.pink(httpServletRequest)) {
+            throw new ForbiddenException("User not Logged");
+        }
+        return new ResponseEntity(userRepository.findAll(), HttpStatus.OK);
+    }
+
+    /*
+     * Get Class Details By Class Id
+     * */
+
+    public ResponseEntity<ClassDetailsResponse> getClassDetailsByClassId(HttpServletRequest httpServletRequest, String classId, String day) {
+
+        if (day.equals("saturday")) {
+            List<Routine> routineList = routineRepository.findAll();
+            Routine routine = routineList.get(0);
+            List<ClassDetailsSaturday> daysList = routine.getDays().get(0).getSaturday();
+            for (ClassDetailsSaturday classDetailsSunday : daysList) {
+                System.out.println(day);
+                if (classDetailsSunday.getClassDetailsId().equals(classId)) {
+                    ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
+
+                    classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
+                    classDetailsResponse.setStartTime(classDetailsSunday.getStartTime());
+                    classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
+                    classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
+                    classDetailsResponse.setLabel(classDetailsSunday.getLabel());
+                    classDetailsResponse.setRoomNo(classDetailsSunday.getRoomNo());
+                    classDetailsResponse.setSection(classDetailsSunday.getSection());
+                    classDetailsResponse.setCourseCode(classDetailsSunday.getCourseCode());
+
+                    return new ResponseEntity(classDetailsResponse, HttpStatus.OK);
+                }
+            }
+        } else if (day.equals("sunday")) {
+            List<Routine> routineList = routineRepository.findAll();
+            Routine routine = routineList.get(0);
+            List<ClassDetailsSunday> daysList = routine.getDays().get(0).getSunday();
+            for (ClassDetailsSunday classDetailsSunday : daysList) {
+                System.out.println(classDetailsSunday.getClassDetailsId() + "====" + classId);
+                System.out.println(classDetailsSunday.getCourseCode());
+                if (classDetailsSunday.getClassDetailsId().equals(classId)) {
+                    ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
+
+                    classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
+                    classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
+                    classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
+                    classDetailsResponse.setLabel(classDetailsSunday.getLabel());
+                    classDetailsResponse.setRoomNo(classDetailsSunday.getRoomNo());
+                    classDetailsResponse.setSection(classDetailsSunday.getSection());
+                    classDetailsResponse.setCourseCode(classDetailsSunday.getCourseCode());
+
+                    return new ResponseEntity(classDetailsResponse, HttpStatus.OK);
+                }
+            }
+        } else if (day.equals("monday")) {
+            List<Routine> routineList = routineRepository.findAll();
+            Routine routine = routineList.get(0);
+            List<ClassDetailsMonday> daysList = routine.getDays().get(0).getMonday();
+            for (ClassDetailsMonday classDetailsSunday : daysList) {
+                System.out.println(classDetailsSunday.getClassDetailsId() + "====" + classId);
+                System.out.println(classDetailsSunday.getCourseCode());
+                if (classDetailsSunday.getClassDetailsId().equals(classId)) {
+                    ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
+
+                    classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
+                    classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
+                    classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
+                    classDetailsResponse.setLabel(classDetailsSunday.getLabel());
+                    classDetailsResponse.setRoomNo(classDetailsSunday.getRoomNo());
+                    classDetailsResponse.setSection(classDetailsSunday.getSection());
+                    classDetailsResponse.setCourseCode(classDetailsSunday.getCourseCode());
+
+                    return new ResponseEntity(classDetailsResponse, HttpStatus.OK);
+                }
+            }
+
+        } else if (day.equals("tuesday")) {
+            List<Routine> routineList = routineRepository.findAll();
+            Routine routine = routineList.get(0);
+            List<ClassDetailsTuesday> daysList = routine.getDays().get(0).getTuesday();
+            for (ClassDetailsTuesday classDetailsSunday : daysList) {
+                System.out.println(classDetailsSunday.getClassDetailsId() + "====" + classId);
+                System.out.println(classDetailsSunday.getCourseCode());
+                if (classDetailsSunday.getClassDetailsId().equals(classId)) {
+                    ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
+
+                    classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
+                    classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
+                    classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
+                    classDetailsResponse.setLabel(classDetailsSunday.getLabel());
+                    classDetailsResponse.setRoomNo(classDetailsSunday.getRoomNo());
+                    classDetailsResponse.setSection(classDetailsSunday.getSection());
+                    classDetailsResponse.setCourseCode(classDetailsSunday.getCourseCode());
+
+                    return new ResponseEntity(classDetailsResponse, HttpStatus.OK);
+                }
+            }
+
+        } else if (day.equals("wednesday")) {
+            List<Routine> routineList = routineRepository.findAll();
+            Routine routine = routineList.get(0);
+            List<ClassDetailsWednesday> daysList = routine.getDays().get(0).getWednesday();
+            for (ClassDetailsWednesday classDetailsSunday : daysList) {
+                System.out.println(classDetailsSunday.getClassDetailsId() + "====" + classId);
+                System.out.println(classDetailsSunday.getCourseCode());
+                if (classDetailsSunday.getClassDetailsId().equals(classId)) {
+                    ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
+
+                    classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
+                    classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
+                    classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
+                    classDetailsResponse.setLabel(classDetailsSunday.getLabel());
+                    classDetailsResponse.setRoomNo(classDetailsSunday.getRoomNo());
+                    classDetailsResponse.setSection(classDetailsSunday.getSection());
+                    classDetailsResponse.setCourseCode(classDetailsSunday.getCourseCode());
+
+                    return new ResponseEntity(classDetailsResponse, HttpStatus.OK);
+                }
+            }
+
+        } else if (day.equals("thursday")) {
+            List<Routine> routineList = routineRepository.findAll();
+            Routine routine = routineList.get(0);
+            List<ClassDetailsThursday> daysList = routine.getDays().get(0).getThursday();
+            for (ClassDetailsThursday classDetailsSunday : daysList) {
+                System.out.println(classDetailsSunday.getClassDetailsId() + "====" + classId);
+                System.out.println(classDetailsSunday.getCourseCode());
+                if (classDetailsSunday.getClassDetailsId().equals(classId)) {
+                    ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
+
+                    classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
+                    classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
+                    classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
+                    classDetailsResponse.setLabel(classDetailsSunday.getLabel());
+                    classDetailsResponse.setRoomNo(classDetailsSunday.getRoomNo());
+                    classDetailsResponse.setSection(classDetailsSunday.getSection());
+                    classDetailsResponse.setCourseCode(classDetailsSunday.getCourseCode());
+
+                    return new ResponseEntity(classDetailsResponse, HttpStatus.OK);
+                }
+            }
+
+        } else {
+            return new ResponseEntity("Class Not Found By Id", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity("Class Not Found By Id", HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<String> deleteRoutine(HttpServletRequest servletRequest) {
+
+        routineRepository.deleteAll();
+        return new ResponseEntity("delete successfull", HttpStatus.NO_CONTENT);
     }
 }
 
