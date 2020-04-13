@@ -192,6 +192,11 @@ public class RoutineService {
 
             }
         } else if (routineUpdateRequest.getDayName().equals("sunday")) {
+            if (routineRepository.updateSundayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
+                    authUtil.getEmployeeId(), routineUpdateRequest.getLabel(), routineUpdateRequest.getRoomNo(),
+                    routineUpdateRequest.getSection(), routineUpdateRequest.getStartTime(), routineUpdateRequest.getClassDetailsId()) == 1) {
+
+            }
 
         } else if (routineUpdateRequest.getDayName().equals("monday")) {
             if (routineRepository.updateMondayMyClass(routineUpdateRequest.getCourseCode(), routineUpdateRequest.getEndTime(), routineUpdateRequest.getFacultyMember(),
@@ -300,6 +305,7 @@ public class RoutineService {
                 if (classDetailsSunday.getClassDetailsId().equals(classId)) {
                     ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
 
+                    classDetailsResponse.setStartTime(classDetailsSunday.getStartTime());
                     classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
                     classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
                     classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
@@ -321,6 +327,7 @@ public class RoutineService {
                 if (classDetailsSunday.getClassDetailsId().equals(classId)) {
                     ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
 
+                    classDetailsResponse.setStartTime(classDetailsSunday.getStartTime());
                     classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
                     classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
                     classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
@@ -343,6 +350,7 @@ public class RoutineService {
                 if (classDetailsSunday.getClassDetailsId().equals(classId)) {
                     ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
 
+                    classDetailsResponse.setStartTime(classDetailsSunday.getStartTime());
                     classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
                     classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
                     classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
@@ -365,6 +373,7 @@ public class RoutineService {
                 if (classDetailsSunday.getClassDetailsId().equals(classId)) {
                     ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
 
+                    classDetailsResponse.setStartTime(classDetailsSunday.getStartTime());
                     classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
                     classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
                     classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
@@ -387,6 +396,7 @@ public class RoutineService {
                 if (classDetailsSunday.getClassDetailsId().equals(classId)) {
                     ClassDetailsResponse classDetailsResponse = new ClassDetailsResponse();
 
+                    classDetailsResponse.setStartTime(classDetailsSunday.getStartTime());
                     classDetailsResponse.setEndTime(classDetailsSunday.getEndTime());
                     classDetailsResponse.setFacultyMember(classDetailsSunday.getFacultyMember());
                     classDetailsResponse.setFacultyMemberEmployeeId(classDetailsSunday.getFacultyMemberEmployeeId());
