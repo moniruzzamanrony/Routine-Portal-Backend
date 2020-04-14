@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.routine.portal</groupId>
-	<artifactId>routinePortal</artifactId>
+	<artifactId>RoutinePortalBackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>routinePortal</name>
 	<description>Demo project for Spring Boot</description>
