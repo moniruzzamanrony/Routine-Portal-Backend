@@ -8,7 +8,7 @@
 #### Request Body
 ``` 
 { 
-"username":"rortgre545tdg", 
+"username":"admin", 
 "role":["admin"],
-"password":"12345675" 
+"password":"12345" 
 } 
